@@ -1,0 +1,47 @@
+#coding: utf-8
+
+#Dhyego Lancaster
+#pandas
+#openpyxl
+#twilio
+import pandas as pd
+from twilio.rest import Client
+
+#entrei no site twilio e crie sua conta gratis
+account_sid = "coloque aqui seu sid criado"
+# Your Auth Token from twilio.com/console
+auth_token  = "coloque seu toke aqui dentro"
+client = Client(account_sid, auth_token)
+
+#abrir o 6 arquivos excel
+lista_meses = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho']
+for mes in lista_meses:
+    #print(mes)
+    tabela_vendas = pd.read_excel(f'{mes}.xlsx')
+    #aqui estou colocando a meta 55.000
+    meta = 55000
+    #print(tabela_vendas)
+#para cada arquivo
+#verificar se algum valor na coluna vendas daquele arquivl é maior que a meta(50.000)
+
+    if (tabela_vendas['Vendas'] > meta).any():
+        vendedor = tabela_vendas.loc[tabela_vendas['Vendas'] > meta,'Vendedor'].values[0]
+        vendas = tabela_vendas.loc[tabela_vendas['Vendas'] > meta,'Vendas'].values[0]
+        print(f'No mes de {mes}, {vendedor} vendeu {vendas} bateu a meta')
+        
+#any() significa algum, se tiver algum ele vai executar
+#.loc() ele localiza na linha o valor pedido, (linha,coluna)
+#.values() ele faz pegar so o valor sem pegar a tabela do dado pedido
+
+#https://www.twilio.com/docs/libraries/python
+        '''message = client.messages.create(
+            #exemplo:to="+5562999999"
+            to="seunumeroaqui",
+            #meu numero no twilio é +14433907112(exemplo) coloque o seu do site
+            from_="+numerodotwilio",
+            body=f'No mes de {mes} o {vendedor} vendeu {vendas} bateu a meta')
+        print(message.sid)'''
+        
+#caso seja nao seja maior do que 55.00 vai fazer nada
+#se for maior do que 50.00 enviamos um sms com nome, o mes e as vendas do vendedor
+
